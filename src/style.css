@@ -89,7 +89,20 @@ nav.links a,.nav-phone,.nav-cta .btn{white-space:nowrap}
 }
 .hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:4rem;align-items:center}
 .hero-grid > div:first-child{max-width:44rem}
-@media (max-width:760px){.hero{background-position:68% center}}
+/* Phones: show the portrait as a band at the top of the hero (face and shoulders),
+   with the headline starting below it over a fade to black. The photo is 16:9 with
+   the face ~88% across and ~20% down, so scale it to 340vw wide and anchor right/top.
+   Portrait only: in landscape the regular wide layout already shows the face. */
+@media (max-width:760px) and (orientation:portrait){
+  .hero{
+    align-items:flex-start;
+    padding-top:82vw;
+    background:
+      linear-gradient(180deg,rgba(8,8,10,0) 0,rgba(8,8,10,0) 40vw,rgba(8,8,10,.55) 68vw,rgba(8,8,10,.93) 92vw,#08080a 118vw),
+      url('https://pub-054c8d455e224383bfba8e2426f1a8bc.r2.dev/blacktie_hero_background.png') right top / 340vw auto no-repeat,
+      #08080a;
+  }
+}
 .hero h1{
   font-size:clamp(3.4rem,8.4vw,7rem);letter-spacing:.1em;color:#fff;margin:1.1rem 0 .1rem;
   text-shadow:0 24px 60px rgba(0,0,0,.6);
@@ -256,7 +269,6 @@ footer{background:#070708;border-top:1px solid rgba(201,162,39,.16);padding:3rem
   .step::after{display:none}
 }
 @media (max-width:760px){
-  .hero{padding-top:7.5rem}
   .hero-list{grid-template-columns:1fr}
   .cards,.why-grid,.steps{grid-template-columns:1fr}
   .f-row{grid-template-columns:1fr}
