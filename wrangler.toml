@@ -1,0 +1,26 @@
+name = "black-tie-closing"
+main = "src/worker.js"
+compatibility_date = "2025-11-01"
+
+routes = [
+  { pattern = "bktcs.com/*", zone_name = "bktcs.com" },
+  { pattern = "www.bktcs.com/*", zone_name = "bktcs.com" },
+]
+workers_dev = false
+
+[assets]
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+# Run the Worker first so the apex -> www redirect and /health always apply.
+run_worker_first = true
+
+[vars]
+TURNSTILE_HOSTNAMES = "bktcs.com,www.bktcs.com"
+
+# Contact form email (Cloudflare Email Service). Locked to the one recipient.
+[[send_email]]
+name = "EMAIL"
+destination_address = "info@bktcs.com"
+
+[observability]
+enabled = true
