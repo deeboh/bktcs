@@ -27,7 +27,8 @@ window.onTurnstileLoad = function () {
   widgetId = window.turnstile.render('#reqTurnstile', {
     sitekey: import.meta.env.VITE_TURNSTILE_SITEKEY,
     action: 'contact',
-    theme: 'dark'
+    theme: 'dark',
+    appearance: 'interaction-only' // hidden unless Cloudflare needs the visitor to click
   });
 };
 
@@ -40,7 +41,7 @@ form.addEventListener('submit', async function (e) {
   e.preventDefault();
   var data = new FormData(form);
   if (!data.get('cf-turnstile-response')) {
-    setStatus('Please complete the verification check above.', 'err');
+    setStatus('Still verifying your browser \u2014 please try again in a moment.', 'err');
     return;
   }
   submitBtn.disabled = true;
