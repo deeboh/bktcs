@@ -67,6 +67,8 @@ nav.links a:hover::after{width:100%}
 .btn-ghost:hover{background:rgba(201,162,39,.12);transform:translateY(-2px)}
 .nav-cta{display:flex;align-items:center;gap:1.1rem}
 .nav-phone{font-family:var(--serif);font-size:1.05rem;letter-spacing:.06em;color:var(--gold-light)}
+.menu-only{display:none}
+nav.links a,.nav-phone,.nav-cta .btn{white-space:nowrap}
 .burger{display:none;background:none;border:1px solid var(--line);color:var(--gold);padding:.55rem .7rem;border-radius:2px;cursor:pointer}
 
 .hero{
@@ -254,15 +256,6 @@ footer{background:#070708;border-top:1px solid rgba(201,162,39,.16);padding:3rem
   .step::after{display:none}
 }
 @media (max-width:760px){
-  nav.links{
-    position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:flex-start;
-    gap:0;background:#0b0b0d;border-bottom:1px solid var(--line);padding:1rem 4vw 1.4rem;
-    display:none;
-  }
-  nav.links.open{display:flex}
-  nav.links a{padding:.85rem 0;width:100%}
-  .burger{display:block}
-  .nav-phone{display:none}
   .hero{padding-top:7.5rem}
   .hero-list{grid-template-columns:1fr}
   .cards,.why-grid,.steps{grid-template-columns:1fr}
@@ -276,3 +269,38 @@ footer{background:#070708;border-top:1px solid rgba(201,162,39,.16);padding:3rem
 .form-status{min-height:1.4em;margin:.9rem 0 0;text-align:center;font-size:.95rem;color:var(--muted)}
 .form-status.ok{color:var(--gold-light)}
 .form-status.err{color:#e08a8a}
+
+/* ---------- Mobile & tablet ----------
+   Below ~1240px the full nav no longer fits on one line, so switch to the burger menu. */
+@media (max-width:1240px){
+  nav.links{
+    position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;
+    gap:0;background:#0b0b0d;border-bottom:1px solid var(--line);padding:.5rem 4vw 1rem;
+    display:none;max-height:calc(100svh - 70px);overflow-y:auto;
+  }
+  nav.links.open{display:flex}
+  nav.links a{padding:1rem 0;border-bottom:1px solid rgba(201,162,39,.1)}
+  nav.links a:last-child{border-bottom:0}
+  nav.links a::after{display:none}
+  nav.links .menu-only{display:block;color:var(--gold-light)}
+  .nav-phone{display:none}
+  .burger{display:grid;place-items:center;width:44px;height:44px;padding:0;font-size:1.25rem}
+  .brand-txt .b1{white-space:nowrap}
+  /* iOS/iPadOS zooms into form fields with text under 16px */
+  input,select,textarea{font-size:16px}
+}
+
+@media (max-width:760px){
+  /* Hero buttons: full width, easy to tap */
+  .hero-actions{flex-direction:column}
+  .hero-actions .btn{width:100%;text-align:center}
+  /* Bigger tap targets in the contact details and footer */
+  .foot-links a{display:inline-block;padding:.6rem 0}
+  a.val{display:inline-block;padding:.35rem 0}
+}
+
+@media (max-width:560px){
+  /* The hero CTA sits right below the header, so drop the header button on phones */
+  .nav-cta .btn{display:none}
+  .nav-inner{padding:.7rem 0}
+}
