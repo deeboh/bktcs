@@ -19,6 +19,13 @@ const FIELDS = {
   notes: ["Notes", 4000, false],
 };
 
+// URLs that used to exist (e.g. an old version of the site) and are gone for good.
+// These return 410 so search engines drop them; everything else unknown is 404.
+// Exact paths, or prefixes ending in "/*".
+const GONE_PATHS = [
+  "/a/*",
+];
+
 const json = (body, status = 200) =>
   Response.json(body, { status, headers: { "cache-control": "no-store", ...SECURITY_HEADERS } });
 
@@ -41,6 +48,7 @@ export default {
     }
 
     const res = await env.ASSETS.fetch(request);
+    if (res.status === 404) return notFound(url.pathname, request.method);
     const out = new Response(res.body, res);
     for (const [k, v] of Object.entries(SECURITY_HEADERS)) out.headers.set(k, v);
     if (res.ok) {
@@ -147,4 +155,30 @@ async function verifyTurnstile(token, ip, env) {
 
 function esc(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
+
+function isGone(path) {
+  return GONE_PATHS.some((p) => (p.endsWith("/*") ? path.startsWith(p.slice(0, -1)) : path === p));
+}
+
+function notFound(path, method) {
+  const gone = isGone(path);
+  const status = gone ? 410 : 404;
+  const title = gone ? "This page has been removed" : "Page not found";
+  const body = `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>${title} | Black Tie Closing Service</title>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b0b0d;color:#e9e6df;font:16px/1.6 Georgia,serif;text-align:center;padding:1rem}
+h1{font-weight:400;letter-spacing:.04em;margin:0 0 .5rem}p{color:#a9a6a0;margin:0 0 1.5rem}
+a{color:#c9a227;text-decoration:none;border-bottom:1px solid #c9a227}</style></head>
+<body><main><h1>${title}</h1><p>${status}</p><a href="/">Return to Black Tie Closing Service</a></main></body></html>`;
+  return new Response(method === "HEAD" ? null : body, {
+    status,
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "public, max-age=300",
+      ...SECURITY_HEADERS,
+    },
+  });
 }

@@ -10,7 +10,8 @@ workers_dev = false
 
 [assets]
 binding = "ASSETS"
-not_found_handling = "single-page-application"
+# Unknown paths fall through to the Worker, which returns 404 / 410.
+not_found_handling = "none"
 # Run the Worker first so the apex -> www redirect and /health always apply.
 run_worker_first = true
 
