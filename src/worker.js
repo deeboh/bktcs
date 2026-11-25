@@ -177,7 +177,8 @@ a{color:#c9a227;text-decoration:none;border-bottom:1px solid #c9a227}</style></h
     status,
     headers: {
       "content-type": "text/html; charset=utf-8",
-      "cache-control": "public, max-age=300",
+      // 410s are permanent, so cache them; never cache 404s so new pages appear immediately.
+      "cache-control": gone ? "public, max-age=300" : "no-store",
       ...SECURITY_HEADERS,
     },
   });
