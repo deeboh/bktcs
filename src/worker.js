@@ -33,8 +33,12 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.hostname === "bktcs.com") {
+    // Canonical origin: https://www.bktcs.com (apex and plain http both redirect there).
+    // Only for the production hostnames, so local dev on http://localhost is unaffected.
+    if (url.hostname === "bktcs.com" || (url.hostname === "www.bktcs.com" && url.protocol === "http:")) {
       url.hostname = "www.bktcs.com";
+      url.protocol = "https:";
+      url.port = "";
       return Response.redirect(url.toString(), 301);
     }
 
